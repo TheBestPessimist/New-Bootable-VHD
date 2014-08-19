@@ -1,11 +1,18 @@
 # Create a dynamic VHD 
-# some info  here: http://blogs.technet.com/b/heyscriptingguy/archive/2013/05/29/use-powershell-to-initialize-raw-disks-and-partition-and-format-volumes.aspx
+# Some info  here: http://blogs.technet.com/b/heyscriptingguy/archive/2013/05/29/use-powershell-to-initialize-raw-disks-and-partition-and-format-volumes.aspx
+
+# This script can only be run from admin powershell must.
+# Also, the execution policy must not be "restricted" 
+# (the default on windows), therefore the following command should be used
+# in a admin powershell window: "Set-ExecutionPolicy Unrestricted"
+
+# bcdboot: type bcdboot $new_vhd_letter/windows [/addlast]
 
 # hardcode path and size
 $vhdPath = "a.vhdx"
-$vhdSize = 10
-$isoPath = "E:\Virtual Machines\Windows 8.1 (multiple editions) (x64) - DVD (English)\en_windows_8_1_x64_dvd_2707217.iso"
-$vhdLabel = "derp"
+$vhdSize = 30
+$isoPath = "E:\iso\Windows 8.1 (multiple editions) (x86) - DVD (English)\en_windows_8_1_x86_dvd_2707392.iso"
+$vhdLabel = "Windows 8.1"
 $bcdboot = "no"
 
 # Get path and size (startup parameters)
@@ -43,19 +50,13 @@ Mount-DiskImage $isoPath
 $devPath = (Get-DiskImage $isoPath).DevicePath
 
 # Call imageX to do it's job
-# imagex /apply "$devPath\sources\install.wim" 1 $vhdLetter":"
+imagex /apply "$devPath\sources\install.wim" 1 $vhdLetter":"
 
 # cleaup
 Dismount-DiskImage $isoPath
 
-# check if this is to be added in the BCD store
+# Check if this is to be added in the BCD store
+# (it appears in the boot menu)
 if ($bcdboot.toLower() -in ("yes", "y")) {
     echo "you said $bcdboot"
 }
-
-
-
-# minecraft 1 6 4
-
-# 113, 126
-# 11)   A* for the vacuum cleaner problem with 3 cells. ()
